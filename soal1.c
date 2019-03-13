@@ -41,7 +41,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  if ((chdir("/home/izzud/Documents/SoalShift_modul2_B01")) < 0) {
+  if ((chdir("/home/izzud/modul2")) < 0) {
     exit(EXIT_FAILURE);
   }
 
@@ -76,15 +76,13 @@ int main() {
 
             //rename and move .png file
             if(ext && strlen(ext)==4 && !strcmp(ext,".png")){
-                if(isNotRenamed(filename, len)){
-                    char fname[200] = {0};
-                    strncpy(fname,filename, len-4);
-                    snprintf(newname, 200, "gambar/%s_grey.png", fname);
-                    rename(filename, newname);
-                }
+              char fname[200] = {0};
+              strncpy(fname,filename, len-4);
+              snprintf(newname, 200, "gambar/%s_grey.png", fname);
+              rename(filename, newname);
             }
         }
-        closedir(d);
+      closedir(d);
     }
     sleep(2);
     //return 0;
