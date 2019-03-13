@@ -12,6 +12,29 @@
 ### Penjelasan program
 
 ```
+#define suffix "_grey.png"
+
+int isNotRenamed(char* filename, int len){
+  if(len<9)
+    return 1;
+
+  const char *last_nine;
+  last_nine = &filename[len-9];
+
+  if(!strcmp(last_nine,suffix))
+      return 0;
+  return 1;
+}
+```
+* Pertama, buat fungsi dengan input nama file dan panjang stringnya untuk mengecek apakah file ".png" tersebut telah di rename sesuai dengan format.
+* Apabila panjang string nama file kurang dari 9, akan langsung me-*return* nilai 1 atau `true`, karena pasti file tersebut belum di-*rename*
+* Variabel `last_nine` berisi pointer menuju elemen ke-9 dari akhir string.
+  * Misalnya string = "Red riding hood.png", maka `last nine` **adalah pointer menuju elemen ke-10**, atau `string[9]`. Jika `puts (lastnine)` dijalankan maka outputnya adalah " hood.png".
+* Cek `last nine` dengan string "_grey.png" menggunakan `strcmp`
+  * Jika dicek dan ternyata file tersebut telah di-*rename*, maka fungsi akan me-*return* 0 atau `false`
+  * Jika tidak, fungsi akan me-*return* 1 atau `true`
+
+```
 if ((chdir("/home/izzud/modul2")) < 0) {
     exit(EXIT_FAILURE);
 }
@@ -25,9 +48,10 @@ d = opendir(".");
 
 * Diambil dari **manpage opendir**: 
   ```
-  The opendir() function opens a directory stream corresponding to  the directory name, and returns a pointer to the directory stream. The stream is positioned at the first entry in the directory.
+  The opendir() function opens a directory stream corresponding to the directory name, and returns a pointer to the directory stream. 
+  The stream is positioned at the first entry in the directory.
   ```
-  `opendir(".")` akan **mengembalikan pointer dari `directory stream` dari "." atau *working directory*** yang kemudian disimpan pada variabel d.
+  `opendir(".")` akan **mengembalikan pointer `directory stream` dari "." atau *working directory*** yang kemudian disimpan pada variabel `d`.
 
 ```
 if (d){
@@ -59,10 +83,12 @@ len = strlen(filename);
 ```
 ext = strrchr(filename, '.');
 ```
-* `strrchr()` akan **me-*return* pointer dari *last occurence* sebuah karakter dalam string**. Misalnya string = "Mary had a little lamb.jpg_orig.jpg" maka yang di-*return* adalah pointer __index ke 32 dari array string__ atau `*string+32`, sehingga ketika `printf("%s", ext)` dijalankan akan menghasilkan output `.jpg`.
+* `strrchr()` akan **me-*return* pointer dari *last occurence* sebuah karakter dalam string**. 
+  * Misalnya string = "Mary had a little lamb.jpg_orig.jpg" maka yang di-*return* adalah pointer __index ke 32 dari array string__ atau `string[31]`, sehingga ketika `printf("%s", ext)` dijalankan akan menghasilkan output `.jpg`.
 
 ```
 if(ext && strlen(ext)==4 && !strcmp(ext,".png") && isNotRenamed(filename, len)){
+    ...
 }
 ```
 * *Condition* pertama: `ext` tidaklah **NULL**
@@ -70,13 +96,20 @@ if(ext && strlen(ext)==4 && !strcmp(ext,".png") && isNotRenamed(filename, len)){
 * *Condition* ketiga: harus ekstensinya harus `.png`
 
 ```
-char fname[200] = {0};
-strncpy(fname,filename, len-4);
-snprintf(newname, 200, "gambar/%s_grey.png", fname);
-rename(filename, newname);
+if(isNotRenamed(filename, len)){
+  char fname[200] = {0};
+  strncpy(fname,filename, len-4);
+  snprintf(newname, 200, "gambar/%s_grey.png", fname);
+}
+else{
+  snprintf(newname, 200, "gambar/%s", filename);
+}
 ```
-* Membuat variabel `fname` untuk menampung nama file **tanpa ekstensi**.
-* `snprintf` akan membuat string sesuai dengan format yang dispesifikasikan, mirip seperti `printf` tetapi output string tersebut akan disimpan ke dalam array dengan panjang maksimal 200.
+* Cek terlebih dahulu **apakah file sudah pernah di*rename* sesuai format** dengan memanggil fungsi `isNotRenamed()`
+  * Jika file belum di-*rename*:
+    * Membuat variabel `fname` untuk menampung nama file **tanpa ekstensi**.
+    * `snprintf` akan membuat string sesuai dengan format yang dispesifikasikan, mirip seperti `printf` tetapi output string tersebut akan disimpan ke dalam array dengan panjang maksimal 200.
+  * Jika file sudah di-*rename*, maka cukup menyimpan string `gambar/[filename]` ke array `newname` menggunakan `snprintf`
 * `rename` tidak hanya digunakan untuk **mengganti nama file**, namun dapat digunakan juga untuk **memindahkan file**, dengan format `[path to directory]/filename` 
 
 #### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal1.c)
@@ -111,7 +144,8 @@ if(stat(filename, &sb) == 0){
 ```
 * Diambil dari **manpage stat**: 
   ```
-  These functions return information about a file, in the buffer pointed to by statbuf. No permissions are required on the file itself, but—in the case of stat(), fstatat(), and lstat()—execute (search) permission is required on all of the directories in pathname that lead to the file.
+  These functions return information about a file, in the buffer pointed to by statbuf. 
+  No permissions are required on the file itself, but—in the case of stat(), fstatat(), and lstat()—execute (search) permission is required on all of the directories in pathname that lead to the file.
 
   stat() and fstatat() retrieve information about the file pointed to by pathname
   ```
@@ -157,7 +191,7 @@ sleep(3);
 
 ## Soal 5
 
-1. Kerjakan poin a dan b di bawah:
+5. Kerjakan poin a dan b di bawah:
 Buatlah program c untuk mencatat log setiap menit dari file log pada `syslog` ke `/home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log` Ket:
    1. Per 30 menit membuat folder `/[dd:MM:yyyy-hh:mm]` Per menit memasukkan `log#.log` ke dalam folder tersebut ‘#’ : increment per menit. Mulai dari 1
    2. Buatlah program c untuk menghentikan program di atas.
@@ -264,9 +298,9 @@ if(!mkdir(date, S_IRWXU | S_IRWXO | S_IRWXG))
     copyToDirectory(date);
 ```
 * Lalu buat direktori sesuai nama yang telah didapat dengan *permission mode* 777 dengan cara menggunakan `bitwise OR` operation terhadap:
-  * S_IRWXU untuk **read, write dan execute permission bagi *owner***
-  * S_IRWXO untuk **read, write dan execute permission bagi *other* atau user lain**
-  * S_IRWXG untuk **read, write dan execute permission bagi *group***
+  * `S_IRWXU` untuk **read, write dan execute permission bagi *owner***
+  * `S_IRWXG` untuk **read, write dan execute permission bagi *group***
+  * `S_IRWXO` untuk **read, write dan execute permission bagi *other* atau user lain**
 * Jika berhasil membuat direktori, jalankan fungsi `copyToDirectory` untuk membuat file-file log yang diambil dari `/var/log/syslog` ke dalam folder tersebut
 ```
 free(date);
@@ -282,11 +316,12 @@ free(date);
 FILE *cmd = popen("pidof /home/izzud/Documents/SoalShift_modul2_B01/soal5a", "r");
 fgets(out, 7, cmd);
 ```
-* Untuk mendapatkan pid dari sebuah proses, perlu command `pidof`. Tetapi `pidof` adalah `shell command`, alternatifnya bisa menggunakan `popen` dari library C untuk menjalankan *command* di `shell` dan mendapatkan hasil dari command tersebut. Diambil dari manpage popen:
+* Untuk mendapatkan pid dari sebuah proses, perlu command `pidof`. Tetapi `pidof` adalah `shell command`, alternatifnya bisa menggunakan `popen` dari library C untuk menjalankan *command* di `shell` dan mendapatkan hasil dari command tersebut. Diambil dari **manpage popen**:
   ```
-  The popen() function opens a process by creating a pipe, forking, and invoking the shell. Since a pipe is by definition unidirectional, the type argument may specify only reading or writing, not both; the resulting stream is correspondingly read-only or write-only. 
+  The popen() function opens a process by creating a pipe, forking, and invoking the shell. 
+  Since a pipe is by definition unidirectional, the type argument may specify only reading or writing, not both; the resulting stream is correspondingly read-only or write-only. 
   ```
-  * Shell command `pidof` akan mencari **pid** dari input string nama proses yang berjalan. Dalam kasus ini, adalah **absolute path** dari file soal5a.c
+  * Shell command `pidof` akan mencari **pid** dari input string nama proses yang berjalan. Dalam kasus ini, adalah **absolute path** dari file soal5a
   
 * Output dari command `pidof` akan disalin ke array `out`
 ```
