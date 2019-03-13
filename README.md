@@ -29,7 +29,7 @@ int isNotRenamed(char* filename, int len){
 * Pertama, buat fungsi dengan input nama file dan panjang stringnya untuk mengecek apakah file ".png" tersebut telah di rename sesuai dengan format.
 * Apabila panjang string nama file kurang dari 9, akan langsung me-*return* nilai 1 atau `true`, karena pasti file tersebut belum di-*rename*
 * Variabel `last_nine` berisi pointer menuju elemen ke-9 dari akhir string.
-  * Misalnya string = "Red riding hood.png", maka `last nine` **adalah pointer menuju elemen ke-10**, atau `string[9]`. Jika `puts (lastnine)` dijalankan maka outputnya adalah " hood.png".
+  * Misalnya string[] = {"Red riding hood.png"}, maka `last nine` **adalah pointer menuju elemen ke-10**, atau `string[9]`. Jika `puts (lastnine)` dijalankan maka outputnya adalah " hood.png".
 * Cek `last nine` dengan string "_grey.png" menggunakan `strcmp`
   * Jika dicek dan ternyata file tersebut telah di-*rename*, maka fungsi akan me-*return* 0 atau `false`
   * Jika tidak, fungsi akan me-*return* 1 atau `true`
@@ -84,7 +84,7 @@ len = strlen(filename);
 ext = strrchr(filename, '.');
 ```
 * `strrchr()` akan **me-*return* pointer dari *last occurence* sebuah karakter dalam string**. 
-  * Misalnya string = "Mary had a little lamb.jpg_orig.jpg" maka yang di-*return* adalah pointer __index ke 32 dari array string__ atau `string[31]`, sehingga ketika `printf("%s", ext)` dijalankan akan menghasilkan output `.jpg`.
+  * Misalnya string[] = {"Mary had a little lamb.jpg_orig.jpg"} maka yang di-*return* adalah pointer menuju __index ke 32 dari array string__ atau `string[31]`, sehingga ketika `puts(ext)` dijalankan akan menghasilkan output `.jpg`.
 
 ```
 if(ext && strlen(ext)==4 && !strcmp(ext,".png") && isNotRenamed(filename, len)){
@@ -118,7 +118,7 @@ else{
 
 ## Soal 2
 
-1. Pada suatu hari Kusuma dicampakkan oleh Elen karena Elen dimenangkan oleh orang lain. Semua kenangan tentang Elen berada pada file bernama `elen.ku` pada direktori `hatiku`. Karena sedih berkepanjangan, tugas kalian sebagai teman Kusuma adalah membantunya untuk menghapus semua kenangan tentang Elen dengan membuat program C **yang bisa mendeteksi owner dan group dan menghapus file `elen.ku` setiap 3 detik** dengan syarat **ketika owner dan grupnya menjadi `www-data`**. Ternyata kamu memiliki kendala karena permission pada file `elen.ku`. Jadi, **ubahlah permissionnya menjadi 777**. Setelah kenangan tentang Elen terhapus, maka Kusuma bisa move on. 
+1. Pada suatu hari Kusuma dicampakkan oleh Elen karena Elen dimenangkan oleh orang lain. Semua kenangan tentang Elen berada pada file bernama `elen.ku` pada direktori `hatiku`. Karena sedih berkepanjangan, tugas kalian sebagai teman Kusuma adalah membantunya untuk menghapus semua kenangan tentang Elen dengan membuat program C **yang bisa mendeteksi owner dan group dan menghapus file**`elen.ku` **setiap 3 detik** dengan syarat **ketika owner dan grupnya menjadi** `www-data`. Ternyata kamu memiliki kendala karena permission pada file `elen.ku`. Jadi, **ubahlah permissionnya menjadi 777**. Setelah kenangan tentang Elen terhapus, maka Kusuma bisa move on. 
     
     `Catatan: Tidak boleh menggunakan crontab`
 
@@ -226,7 +226,7 @@ char* getDate(){
   * `%d sebagai pengganti tanggal`
   * `%m sebagai pengganti bulan`
   * `%Y sebagai pengganti tahun` 
-  * `%R yang ekuivalen dengan waktu dengan format hh:mm (24 jam)`
+  * `%R yang ekuivalen dengan jam dan menit dengan format hh:mm (24 jam)`
 
 ```
 void copyToDirectory(char* directory){
@@ -270,12 +270,12 @@ void copyToDirectory(char* directory){
 ```
 * Buka file log di `/var/log/syslog` dengan mode "r" atau *read-only*, simpan pointernya di variabel `source`
 * Masukkan nama file yang tujuan dengan format `[directory]/log#.log` (dengan `#` adalah nilai variabel `i`) menggunakan `snprintf` ke dalam array `newname`
-* Buka file baru dengan format yang ada di dalam `newname` dengan mode "w", sehingga terbuat file kosong baru. Simpan pointernya ke dalam variabel `out`
+* Buka file output dengan format yang ada di dalam `newname` dengan mode "w", sehingga terbuat file kosong baru. Simpan pointernya ke dalam variabel `out`
 * Apabila telah berhasil membuka kedua file, maka block `while` akan dijalankan:
   * `fgetc` akan **mengambil setiap karakter dari file *source* sampai EOF**
   * Karakter yang telah diambil kemudian akan **disalin ke file output oleh `fputc`**
 * **Close** *file stream* untuk output dan input.
-*  Nilai variabel `i` akan ditambah 1;
+*  Nilai variabel `i` akan ditambah 1
 *  Program lalu **diberhentikan untuk sementara selama 60 detik** menggunakan `sleep(60)`, dan akan memulai loop kembali sebanyak 30 kali.
 
 Kembali ke fungsi main():
@@ -321,7 +321,7 @@ fgets(out, 7, cmd);
   The popen() function opens a process by creating a pipe, forking, and invoking the shell. 
   Since a pipe is by definition unidirectional, the type argument may specify only reading or writing, not both; the resulting stream is correspondingly read-only or write-only. 
   ```
-  * Shell command `pidof` akan mencari **pid** dari input string nama proses yang berjalan. Dalam kasus ini, adalah **absolute path** dari file soal5a
+  * Shell command `pidof` akan **mencari *pid* dari input string nama proses yang berjalan**. Dalam kasus ini, adalah **absolute path** dari file soal5a
   
 * Output dari command `pidof` akan disalin ke array `out`
 ```
@@ -331,9 +331,9 @@ pclose(cmd);
 if(!kill(pid, SIGKILL))
     printf("Process with pid of %d is successfully killed\n", pid);
 ```
-* Isi dari array `out` yang merupakan string kemudian dikonversi menjadi ***unsigned long integer*** dan disimpan di variabel `pid` dengan tipe `pid_t`
+* Isi dari array `out` yang merupakan string kemudian dikonversi menjadi ***unsigned long integer*** dan disimpan di variabel `pid` dengan tipe `pid_t` menggunakan fungsi `strtoul`
 * Close *stream* menggunakan `pclose`
-* Kirim sinyal `SIGKILL` menggunakan command `kill` ke pid dari proses soal5a.c
+* Kirim sinyal `SIGKILL` menggunakan command `kill` ke pid dari proses soal5a
 
 #### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal5b.c)
 
