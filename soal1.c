@@ -12,12 +12,15 @@
 
 // 1 for true     
 int isNotRenamed(char* filename, int len){
-    const char *last_nine;
-    last_nine = &filename[len-9];
-
-    if(!strcmp(last_nine,suffix))
-        return 0;
+  if(len<9)
     return 1;
+
+  const char *last_nine;
+  last_nine = &filename[len-9];
+
+  if(!strcmp(last_nine,suffix))
+      return 0;
+  return 1;
 }
 
 int main() {
@@ -76,9 +79,14 @@ int main() {
 
             //rename and move .png file
             if(ext && strlen(ext)==4 && !strcmp(ext,".png")){
-              char fname[200] = {0};
-              strncpy(fname,filename, len-4);
-              snprintf(newname, 200, "gambar/%s_grey.png", fname);
+              if(isNotRenamed(filename, len)){
+                char fname[200] = {0};
+                strncpy(fname,filename, len-4);
+                snprintf(newname, 200, "gambar/%s_grey.png", fname);
+              }
+              else{
+                snprintf(newname, 200, "gambar/%s", filename);
+              }
               rename(filename, newname);
             }
         }
