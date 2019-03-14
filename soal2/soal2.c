@@ -32,7 +32,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  if ((chdir("/home/izzud/Documents/SoalShift_modul2_B01/hatiku")) < 0) {
+  if ((chdir("/home/izzud/Documents/SoalShift_modul2_B01/soal2/hatiku")) < 0) {
     exit(EXIT_FAILURE);
   }
 

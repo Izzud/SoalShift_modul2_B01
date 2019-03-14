@@ -7,7 +7,7 @@ int main(){
     char out[7]={0};
 
     //pipe, find pid
-    FILE *cmd = popen("pidof /home/izzud/Documents/SoalShift_modul2_B01/soal5a", "r");
+    FILE *cmd = popen("pidof /home/izzud/Documents/SoalShift_modul2_B01/soal5/soal5a", "r");
 
     //grab its output
     fgets(out, 7, cmd);

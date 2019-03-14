@@ -73,7 +73,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  if ((chdir("/home/izzud/Documents/SoalShift_modul2_B01")) < 0) {
+  if ((chdir("/home/izzud/Documents/SoalShift_modul2_B01/soal5")) < 0) {
     exit(EXIT_FAILURE);
   }
 
