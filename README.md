@@ -307,7 +307,7 @@ exit(EXIT_SUCCESS);
 - setelah didapatkan waktu program dijalankan dan waktu terakhir file makan_enak.txt diakses, kemudian dicari selisihnya dengan menggunakan fungsi difftime
 - jika difftime <= 30, maka program soal4 dijalankan dalam rentang waktu 0-30 detik setelah file makan_enak diakses, maka harus membuat file makan_sehat#.txt, untuk itu fungsi createFile () dipanggil.
 
-#### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal4.c)
+#### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal4/soal4.c)
   
 ## Soal 5
 
