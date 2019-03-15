@@ -251,6 +251,63 @@ child_id2 = fork();
 - hasilnya diduplikasi ke dalam file yang tadi sudah dibuka (daftar.txt)
 
 #### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal3/soal3.c)
+
+## Soal 4
+4.	Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).
+Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
+
+Contoh:
+File makan_enak.txt terakhir dibuka pada detik ke-1
+Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt
+
+Catatan: 
+•	dilarang menggunakan crontab
+•	Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst
+
+## Penjelasan program
+* membuat fungsi createFile
+```
+void createFile() {
+ 	int count =1;
+      char newname[100];
+      sprintf(newname, "%d", count);
+
+      char dir[]="/home/kiki/Documents/makanan/makan_sehat";
+      strcat(dir, newname);
+      strcat(dir,".txt");
+      
+      FILE *makanan = fopen("/home/kiki/Documents/makanan/makan_sehat", "w"); 
+      fclose(makanan);
+      count=count+1;
+}
+```
+- count digunakan sebagai penomoran file makan_sehat#.txt
+- membuat file dengan nama makan_sehat di dalam folder makanan
+- strcat digunakan untuk mempermudah penamaan file
+- setiap file makan_sehat berhasil di write, count diincrement
+* menggunakan template daemon
+* membuat proses yang berjalan setiap 5 detik
+```
+while(1) 
+  {
+    time_t timer;
+    struct stat sb;
+    stat("/home/kiki/Documents/makanan/makan_enak.txt", &sb);
+
+    if(difftime(time(&timer),sb.st_atime)<=30)
+    {
+	createFile();
+    }
+    sleep(5);
+  }
+exit(EXIT_SUCCESS);
+```
+- mengambil time dari program yang dijalankan (program soal4) kemudian disimpan dalam variable timer
+- stat digunakan untuk mereturn informasi sebuah file, dalam hal ini akan diambil informasi berupa waktu akses dari file makan_enak.txt
+- setelah didapatkan waktu program dijalankan dan waktu terakhir file makan_enak.txt diakses, kemudian dicari selisihnya dengan menggunakan fungsi difftime
+- jika difftime <= 30, maka program soal4 dijalankan dalam rentang waktu 0-30 detik setelah file makan_enak diakses, maka harus membuat file makan_sehat#.txt, untuk itu fungsi createFile () dipanggil.
+
+#### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal4.c)
   
 ## Soal 5
 
