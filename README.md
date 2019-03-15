@@ -209,8 +209,7 @@ sleep(3);
 child_id = fork();
 
 	if(child_id == 0){
-	char 
-* kita memerlukan daftar fle yang ada di direktori campur2 untuk kemudian dipilih *argv[5] = {"unzip","/home/kiki/Documents/campur2.zip","-d", "/home/kiki/Documents", NULL};
+	char *argv[5] = {"unzip","/home/kiki/Documents/campur2.zip","-d", "/home/kiki/Documents", NULL};
 	execv("/usr/bin/unzip", argv);
 ```
 
