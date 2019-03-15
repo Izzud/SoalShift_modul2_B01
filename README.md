@@ -118,7 +118,7 @@ else{
 
 ## Soal 2
 
-1. Pada suatu hari Kusuma dicampakkan oleh Elen karena Elen dimenangkan oleh orang lain. Semua kenangan tentang Elen berada pada file bernama `elen.ku` pada direktori `hatiku`. Karena sedih berkepanjangan, tugas kalian sebagai teman Kusuma adalah membantunya untuk menghapus semua kenangan tentang Elen dengan membuat program C **yang bisa mendeteksi owner dan group dan menghapus file**`elen.ku` **setiap 3 detik** dengan syarat **ketika owner dan grupnya menjadi** `www-data`. Ternyata kamu memiliki kendala karena permission pada file `elen.ku`. Jadi, **ubahlah permissionnya menjadi 777**. Setelah kenangan tentang Elen terhapus, maka Kusuma bisa move on. 
+2. Pada suatu hari Kusuma dicampakkan oleh Elen karena Elen dimenangkan oleh orang lain. Semua kenangan tentang Elen berada pada file bernama `elen.ku` pada direktori `hatiku`. Karena sedih berkepanjangan, tugas kalian sebagai teman Kusuma adalah membantunya untuk menghapus semua kenangan tentang Elen dengan membuat program C **yang bisa mendeteksi owner dan group dan menghapus file**`elen.ku` **setiap 3 detik** dengan syarat **ketika owner dan grupnya menjadi** `www-data`. Ternyata kamu memiliki kendala karena permission pada file `elen.ku`. Jadi, **ubahlah permissionnya menjadi 777**. Setelah kenangan tentang Elen terhapus, maka Kusuma bisa move on. 
     
     `Catatan: Tidak boleh menggunakan crontab`
 
@@ -189,6 +189,70 @@ sleep(3);
 
 <br>
 
+## Soal 3
+3. Diberikan file campur2.zip. Di dalam file tersebut terdapat folder “campur2”. 
+   Buatlah program C yang dapat :
+   i)  mengekstrak file zip tersebut.
+   ii) menyimpan daftar file dari folder “campur2” yang memiliki ekstensi .txt ke dalam file daftar.txt. 
+   Catatan:  
+   Gunakan fork dan exec.
+   Gunakan minimal 3 proses yang diakhiri dengan exec.
+   Gunakan pipe
+   Pastikan file daftar.txt dapat diakses dari text editor
+
+<br>
+
+## Penjelasan Program
+
+1. mengunzip file 
+```
+child_id = fork();
+
+	if(child_id == 0){
+	char 
+* kita memerlukan daftar fle yang ada di direktori campur2 untuk kemudian dipilih *argv[5] = {"unzip","/home/kiki/Documents/campur2.zip","-d", "/home/kiki/Documents", NULL};
+	execv("/usr/bin/unzip", argv);
+```
+
+2. melakukan ls dari folder yang sudah di unzip
+```
+child_id2 = fork();
+	if(child_id2 == 0 ){
+	close (fd[0]); //read
+		dup2(fd[1],STDOUT_FILENO);
+		char *argv[3] = {"ls", "/home/kiki/Documents/campur2/", NULL};
+		execv("/bin/ls", argv);
+		}
+  ```
+- dup2 digunakan untuk menduplikasi STDOUT_FILENO yang merupakan output proses yang ditampilkan di console ke dalam pipe fd yang nantinya akan digunakan dalam proses selanjutnya sebagai input.
+- karena di soal diminta menggunakan pipe, maka digunakan fd[], sebelumnya sudah dideklarasikan sebagai fd[2] di awal.
+   fd[0] memiliki akses read, yang dapat digunakan sebagai input
+   fd[1] memiliki akses write, yang dapat digunakan sebagai output
+   jadi, fd[1] sebagai output dapat digunakan sebagai input fd[0]
+   seperti pipe pada system ( | )
+- hasil dari exac di atas harusnya ditampilkan langsung pada terminal (console) namun dengan penggunaan fungsi dup2, hasil STDOUT_FILENO diduplikasi ke fd[1] untuk nantinya digunakan sebagai input pada proses selanjutnya.
+- hasil dari execv tadi berupa nama nama file yang ada dalam folder campur2.
+
+
+3. mendapatkan file dengan ekstensi .txt
+```
+			close(fd[1]);
+			dup2(fd[0],STDIN_FILENO);
+			int fileopen = open("/home/kiki/Documents/daftar.txt", O_WRONLY);
+			close(fd[0]);
+			dup2(fileopen, STDOUT_FILENO);
+			char *argv[3] = {"grep",".txt$", NULL};
+			execv("/bin/grep", argv);
+
+```
+- fd[1] sebagai output tadi diclose
+- hasil fd[1] tadi digunakan sebagai input (STDIN_FILENO) untuk diread oleh fd[0] (sebagai input), maka dari itu dilakukan duplikasi
+- membuka file `daftar.txt` yang sebelumnya sudah dibuat di direktori Documents dengan melakukan `touch daftar.txt`
+- dilakukan execv untuk mendapatkan file berekstensi .txt dari hasil sebelumnya (fd[0]) sebagai input
+- hasilnya diduplikasi ke dalam file yang tadi sudah dibuka (daftar.txt)
+
+#### [Source code program](https://github.com/Izzud/SoalShift_modul2_B01/blob/master/soal3/soal3.c)
+  
 ## Soal 5
 
 5. Kerjakan poin a dan b di bawah:
