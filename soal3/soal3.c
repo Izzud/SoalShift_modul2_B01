@@ -9,7 +9,6 @@ int main () {
 	int fd[2];
 	pid_t child_id;
 	pid_t child_id2;
-	pid_t child_id3;
 	pipe(fd);
 	int status;
 	if(pipe(fd) < 0) exit (1);
@@ -26,7 +25,6 @@ int main () {
 	child_id2 = fork();
 	if(child_id2 == 0 ){
 	close (fd[0]); //read
-		int file = open("/home/kiki/Documents/daftar.txt", O_WRONLY);
 		dup2(fd[1],STDOUT_FILENO);
 		char *argv[3] = {"ls", "/home/kiki/Documents/campur2/", NULL};
 		execv("/bin/ls", argv);
